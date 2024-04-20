@@ -87,7 +87,7 @@ int SignIn()
 
 int Admin_SignIn()
 {
-    char Username[4],Password[4],U1[4],P1[4];
+    char Username[5],Password[5],U1[5],P1[5];
 
     printf("Enter Username : ");
     scanf("%s",Username);
