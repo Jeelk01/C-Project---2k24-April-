@@ -1,0 +1,10 @@
+Samosa		20.000000
+Chatni		20.000000
+AAta		90.000000
+Milk		35.000000
+Laptop		98765.000000
+Snacks		40.000000
+Chips		80.000000
+ColdCoco		60.000000
+amulcool		10.000000
+vadapau		25.000000
