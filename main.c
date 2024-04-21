@@ -1,7 +1,12 @@
 
 #include<stdio.h>
 #include<string.h>
+#include<time.h>
 #include<conio.h>
+#include<unistd.h>
+#define D1 300000
+#define D2 400000
+#define D3 500000
 
 struct Items{
     char Item_Name[10];
@@ -13,6 +18,9 @@ struct Customer{
     int Customer_Age;
     struct Items Purchase[10];
     int Customer_Item_Qty[10];
+    float Item_Cost_Qty[10];
+    float Total_Bill;
+    int Total_Qty;
 };
 
 void SignUp()
@@ -113,6 +121,8 @@ int Admin_SignIn()
     
     fclose(Admin_SignIn);
     Admin_SignIn = NULL;
+
+    Admin_Panel();
     return 0;
 }
 
@@ -126,7 +136,7 @@ void Add_Items()
     {
         printf("Item Number : %d.\n",i+1);
         printf("Enter Item Name : ");
-        scanf("%s",Add[i].Item_Name);
+        scanf("%10s",Add[i].Item_Name);
         printf("Enter Item Price : ");
         scanf("%f",&Add[i].Item_Price);
     }
@@ -141,7 +151,7 @@ void Add_Items()
 
     for(int i=0;i<5;++i)
     {
-        fprintf(ptr,"%s\t\t%f\n",Add[i].Item_Name,Add[i].Item_Price);
+        fprintf(ptr,"%10s\t\t%5.2f\n",Add[i].Item_Name,Add[i].Item_Price);
     }
 
     fclose(ptr);
@@ -169,18 +179,44 @@ void Display_Item()
 
     for(int j=0;j<i;++j)
     {
-        printf("%d.\t%s\t\t\t%f\n", j+1 , Display[j].Item_Name , Display[j].Item_Price );
+        printf("%0.2d.\t%10s\t\t\t%5.2f\n", j+1 , Display[j].Item_Name , Display[j].Item_Price );
     }
     fclose(ptr);
     ptr = NULL;
+}
+
+void User_List(){
+
 }
 
 void Admin_Panel()
 {
     int Admin_Flag = 0;
 
-    printf("1. Add Items\n");
-    printf("2. Display Items\n");
+    printf("\n\n");
+    printf("---------------------------");
+    printf("| 1. Add Items            |");
+    printf("| 2. Display Items        |");
+    printf("| 3. All User List        |");
+    printf("---------------------------");
+
+
+    printf("Enter your Need : ");
+    scanf("%d",&Admin_Flag);
+
+    switch(Admin_Flag)
+    {
+        case 1:
+            Add_Items();
+            break;
+        case 2:
+            Display_Item();
+            break;
+        case 3:
+            User_List();
+        default:
+            printf("Invalid input...!\n");
+    }
 }
 
 void User_Interface()
@@ -206,17 +242,12 @@ void User_Interface()
     printf("Enter Your Age : ");
     scanf("%d",&C1.Customer_Age);
     printf("--------------------------------------------------\n");
-    printf("\n");
+    printf("\v");
     printf("The Product list is Given Here.\n");
-
-    printf("%s\n",C1.Customer_Name);
-    printf("%s\n",C1.Customer_mobile);
-    printf("%d\n",C1.Customer_Age);
 
     struct Items Display[40];
     FILE *ptr = NULL;
     ptr = fopen("Item_list.txt","r");
-    printf("File opening.\n");
     if(ptr == NULL)
     {
         printf("File doesn't open properly.\n");
@@ -227,6 +258,11 @@ void User_Interface()
     {   
         ++i;
     }
+
+    printf("--------------------------------------------------\n");
+    printf("%3s \t%10s \t  \t%3s\n","No.","Item Name","Rate");
+    printf("--------------------------------------------------\n");
+    
     for(int j=0;j<i;++j)
     {   
         printf("%0.2d.\t%10s\t--\t%0.2f\n",j+1,Display[j].Item_Name,Display[j].Item_Price);
@@ -234,27 +270,15 @@ void User_Interface()
     fclose(ptr);
     ptr = NULL;
 
-    int Itemnumber = 0,Itemcount = 0,ItemQty = 0,Total_Item_Purchase = 10,Add_Other_Item;
+    printf("The value of i is %d.\n\n",i);
 
+    int Itemnumber = 0,Itemcount = 0,ItemQty = 0,Total_Item_Purchase = 10,Add_Other_Item;
     printf("\n");
     printf("You can purchase only 10 item at a time.\n");
-
-//     struct Items{
-//          char Item_Name[10];
-//          float Item_Price;
-//     };
-//     struct Customer{
-//          char Customer_Name[10];
-//          char Customer_mobile[10];
-//          int Customer_Age;
-//          struct Items Purchase[10];
-//          int Customer_Item_Qty[10];
-//     };
 
     while(1)
     {
         Itemnumber = 0;
-        printf("Executed .\n\n");
         printf("Enter number that item want purchase : ");
         scanf("%d",&Itemnumber);
         if(Itemnumber>i)
@@ -265,9 +289,8 @@ void User_Interface()
         
         printf("Enter Quantity : ");
         scanf("%d",&ItemQty);
-        printf("scanf executed.\n");
+        printf("\n");
         strcpy(C1.Purchase[Itemcount].Item_Name,Display[Itemnumber-1].Item_Name);
-        printf("strcopied.\n");
         C1.Purchase[Itemcount].Item_Price = Display[Itemnumber-1].Item_Price;
         C1.Customer_Item_Qty[Itemcount] = ItemQty;
         Itemcount++;
@@ -275,16 +298,169 @@ void User_Interface()
         printf("Do you want to add another product (Yes - 1 , No - 0): ");
         scanf("%d",&Add_Other_Item);
 
-        if((Add_Other_Item)==0)
+        if((Add_Other_Item)==1)
         {
+            continue;;
+        }else{
             break;
         }
     }
+    Generate_Bill(C1,Itemcount);
 
 }
 
-int main()
+void Generate_Bill(struct Customer C1, int Itemcount)
 {
-    User_Interface();
-    return 0;
+    printf("Generate bill called.\n");
+    C1.Total_Qty = 0;
+    for(int j = 0;j<Itemcount;++j)
+    {
+        C1.Total_Qty+=C1.Customer_Item_Qty[j];
+    }
+    printf("Qty total counted.\n");
+    C1.Total_Bill = 0;
+    for(int i=0;i<Itemcount;++i)
+    {
+        C1.Item_Cost_Qty[i] = C1.Purchase[i].Item_Price * C1.Customer_Item_Qty[i];
+        C1.Total_Bill+=C1.Item_Cost_Qty[i];
+    }
+    printf("Total cost couted.\n");
+    
+    FILE * User_Bill_List = NULL;
+    User_Bill_List = fopen("User_Accounts.txt","a");
+    fprintf(User_Bill_List,"%10s \t\t%10s \t\t%2.0d \t\t%2.0d \t\t%5.2f \t\t%s \t\t%s\n",C1.Customer_Name,C1.Customer_mobile,Itemcount,C1.Total_Qty,C1.Total_Bill,__DATE__,__TIME__);
+    printf("Data added to user_Bill_List.\n");
+    fclose(User_Bill_List);
+    User_Bill_List = NULL;
+    printf("User_Bill_List closed.\n");
+    
+    FILE * Bill_User = NULL;
+    FILE * Bill_Admin = NULL;
+    
+
+    Bill_User = fopen("Bill.txt","w");
+    Bill_Admin = fopen("Bill_Admin.txt","a");
+    
+
+    if((Bill_User)==NULL || (Bill_Admin)==NULL || (User_Bill_List)==NULL)
+    {
+        printf("File doesn't open properly.\n");
+        return;
+    }
+
+    fprintf(Bill_Admin,"\n\n");
+    fprintf(Bill_Admin,"--------------------Bill-Reciept-------------------\n");
+    fprintf(Bill_User,"--------------------Bill-Reciept-------------------\n");
+    
+    fprintf(Bill_Admin,"Name : %10s \t  Mobile No. : %s \n",C1.Customer_Name,C1.Customer_mobile);
+    fprintf(Bill_User,"Name : %10s \t  Mobile No. : %s \n",C1.Customer_Name,C1.Customer_mobile);
+
+    fprintf(Bill_Admin,"--------------------------------------------------\n");
+    fprintf(Bill_User,"--------------------------------------------------\n");
+
+    fprintf(Bill_Admin,"%s \t\t\t\t %s\n",__DATE__,__TIME__);
+    fprintf(Bill_User,"%s  \t\t\t\t %s\n",__DATE__,__TIME__);
+    
+    
+    fprintf(Bill_Admin,"--------------------------------------------------\n");
+    fprintf(Bill_User,"--------------------------------------------------\n");
+    
+    fprintf(Bill_Admin,"%3s \t%10s \t\t%5s \t\t%3s \t\t%6s \n","No.","Item Name","Rate","Qty","Amount");
+    fprintf(Bill_User,"%3s \t%10s \t\t%5s \t\t%3s \t\t%6s \n","No.","Item Name","Rate","Qty","Amount");
+
+    fprintf(Bill_Admin,"--------------------------------------------------\n");
+    fprintf(Bill_User,"--------------------------------------------------\n");
+
+    for(int j=0;j<Itemcount;++j)
+    {
+        fprintf(Bill_Admin,"%2.0d. \t%10s \t\t%5.2f \t\t%2.0d \t\t%5.2f \n", j+1, C1.Purchase[j].Item_Name, C1.Purchase[j].Item_Price, C1.Customer_Item_Qty[j], C1.Item_Cost_Qty[j]);
+
+        fprintf(Bill_User,"%2.0d. \t%10s \t\t%5.2f \t\t%2.0d \t\t%5.2f \n", j+1, C1.Purchase[j].Item_Name, C1.Purchase[j].Item_Price, C1.Customer_Item_Qty[j], C1.Item_Cost_Qty[j]);
+    }
+    fprintf(Bill_Admin,"--------------------------------------------------\n");
+    fprintf(Bill_User,"--------------------------------------------------\n");
+
+    fprintf(Bill_Admin,"%s \t%d \t%s \t%s \n","Total Item : ",Itemcount,"Total Qty : ",C1.Total_Qty);
+    fprintf(Bill_User,"%s \t%d \t%s \t%s \n","Total Item : ",Itemcount,"Total Qty : ",C1.Total_Qty);
+
+    fprintf(Bill_Admin,"    \t          \t\t        Total : %5.2f\n",C1.Total_Bill);
+    fprintf(Bill_User,"    \t          \t\t        Total : %5.2f\n",C1.Total_Bill);
+
+    fprintf(Bill_Admin,"--------------------------------------------------\n");
+    fprintf(Bill_User,"--------------------------------------------------\n");
+
+    fprintf(Bill_Admin,"-----------Visit Again - Have a good day-----------\n");
+    fprintf(Bill_User,"-----------Visit Again - Have a good day-----------\n");
+
+    fprintf(Bill_Admin,"--------------------------------------------------\n");
+    fprintf(Bill_User,"--------------------------------------------------\n");
+
+    fclose(Bill_Admin);
+    Bill_Admin = NULL;
+    fclose(Bill_User);
+    Bill_User = NULL;
+
+    printf("\nYour Bill is Generated Successfully.....!\n");
+    
+}
+
+void main()
+{
+    printf("===============================================\n");
+    printf("| Welcome ! we are glad you're here.           |\n");
+    printf("| Just Let us know.                            |\n");
+    printf("| Enjoy Your Visit.                            |\n");
+    printf("===============================================\n");
+
+    usleep(1000000); // Delay for 1 second.
+
+    printf("\n\n");
+    printf("---------------------------");
+    printf("| 1. User                 |");
+    printf("| 2. Admin                |");
+    printf("---------------------------");
+    int choice = 0,choice1;
+    printf("Enter your choice : ");
+    scanf("%d",&choice);
+
+    switch(choice)
+    {
+        case 1:
+            printf("\n");
+            printf("Do you have account already (1 - yes) (0 - No) : ");
+            scanf("%d",&choice1);
+            usleep(D1);
+                switch(choice1)
+                {
+                    case 1:
+                        if(SignIn())
+                        {
+                            User_Interface();
+                        }
+                        break;
+                    case 0:
+                        SignUp();
+                        usleep(D3);
+                        if(SignIn())
+                        {
+                            User_Interface();
+                        }
+                        break;
+                    default:
+                        printf("Invalid Input.....!\n");
+                        return;
+                }
+        
+        case 2:
+            printf("\n");
+            if(Admin_SignIn())
+            {
+                usleep(D3);
+                Admin_Panel();
+            }
+
+        default:
+        printf("Invalid Input.....!\n");
+    }
+
 }
