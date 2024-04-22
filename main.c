@@ -193,11 +193,11 @@ void Admin_Panel()
     int Admin_Flag = 0;
 
     printf("\n\n");
-    printf("---------------------------");
-    printf("| 1. Add Items            |");
-    printf("| 2. Display Items        |");
-    printf("| 3. All User List        |");
-    printf("---------------------------");
+    printf("---------------------------\n");
+    printf("| 1. Add Items            |\n");
+    printf("| 2. Display Items        |\n");
+    printf("| 3. All User List        |\n");
+    printf("---------------------------\n");
 
 
     printf("Enter your Need : ");
@@ -407,17 +407,17 @@ void main()
 {
     printf("===============================================\n");
     printf("| Welcome ! we are glad you're here.           |\n");
-    printf("| Just Let us know.                            |\n");
+    printf("| Just Let us know. How can we help you..?     |\n");
     printf("| Enjoy Your Visit.                            |\n");
     printf("===============================================\n");
 
     usleep(1000000); // Delay for 1 second.
 
     printf("\n\n");
-    printf("---------------------------");
-    printf("| 1. User                 |");
-    printf("| 2. Admin                |");
-    printf("---------------------------");
+    printf("---------------------------\n");
+    printf("| 1. User                 |\n");
+    printf("| 2. Admin                |\n");
+    printf("---------------------------\n");
     int choice = 0,choice1;
     printf("Enter your choice : ");
     scanf("%d",&choice);
