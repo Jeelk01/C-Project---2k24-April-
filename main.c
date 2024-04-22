@@ -1,4 +1,3 @@
-
 #include<stdio.h>
 #include<string.h>
 #include<time.h>
@@ -462,5 +461,4 @@ void main()
         default:
         printf("Invalid Input.....!\n");
     }
-
 }
