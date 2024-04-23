@@ -38,7 +38,7 @@ void SignUp()
         scanf("%s",Username);
     }
 
-    printf("Password must be of 6 characters only : ");
+    printf("Password must be of 6 characters only.\n");
     printf("Enter your Password : ");
     scanf("%s",Password);
 
