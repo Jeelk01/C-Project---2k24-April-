@@ -14,7 +14,6 @@ struct Items{
 struct Customer{
     char Customer_Name[10];
     char Customer_mobile[10];
-    int Customer_Age;
     struct Items Purchase[10];
     int Customer_Item_Qty[10];
     float Item_Cost_Qty[10];
@@ -236,10 +235,6 @@ void User_Interface()
         printf("Re-Enter your Mobile Number : ");
         gets(C1.Customer_mobile);
     }
-    printf("--------------------------------------------------\n");
-
-    printf("Enter Your Age : ");
-    scanf("%d",&C1.Customer_Age);
     printf("--------------------------------------------------\n");
     printf("\v");
     printf("The Product list is Given Here.\n");
