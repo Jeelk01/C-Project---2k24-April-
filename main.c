@@ -264,8 +264,6 @@ void User_Interface()
     fclose(ptr);
     ptr = NULL;
 
-    printf("The value of i is %d.\n\n",i);
-
     int Itemnumber = 0,Itemcount = 0,ItemQty = 0,Total_Item_Purchase = 10,Add_Other_Item;
     printf("\n");
     printf("You can purchase only 10 item at a time.\n");
@@ -318,7 +316,7 @@ void Generate_Bill(struct Customer C1, int Itemcount)
         C1.Item_Cost_Qty[i] = C1.Purchase[i].Item_Price * C1.Customer_Item_Qty[i];
         C1.Total_Bill+=C1.Item_Cost_Qty[i];
     }
-    printf("Total cost couted.\n");
+    printf("Total cost counted.\n");
     
     FILE * User_Bill_List = NULL;
     User_Bill_List = fopen("User_Accounts.txt","a");
