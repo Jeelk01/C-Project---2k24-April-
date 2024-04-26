@@ -1,10 +1,10 @@
-Samosa		20.000000
-Chatni		20.000000
-AAta		90.000000
-Milk		35.000000
-Laptop		98765.000000
-Snacks		40.000000
-Chips		80.000000
-ColdCoco		60.000000
-amulcool		10.000000
-vadapau		25.000000
+    Samosa		25.00
+   ThumsUp		20.00
+    Chhole		80.00
+  NoteBook		20.00
+     Sheet		 5.00
+  T-shirts		400.00
+     jeans		1000.00
+    Hoddie		2500.00
+   Charger		500.00
+Mobile-Cov		200.00
