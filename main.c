@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<string.h>
+#include<stdlib.h>
 #include<time.h>
 #include<conio.h>
 #include<unistd.h>
@@ -8,12 +9,12 @@
 #define D3 500000
 
 struct Items{
-    char Item_Name[10];
+    char Item_Name[15];
     float Item_Price;
 };
 struct Customer{
     char Customer_Name[10];
-    char Customer_mobile[10];
+    char Customer_mobile[11];
     struct Items Purchase[10];
     int Customer_Item_Qty[10];
     float Item_Cost_Qty[10];
@@ -24,6 +25,7 @@ struct Customer{
 void SignUp()
 {
     char Username[7],Password[7];
+    printf("\n\n");
     printf("-------------------------------------\n");
     printf("               Sign Up               \n");
     printf("-------------------------------------\n");
@@ -51,6 +53,11 @@ void SignUp()
     FILE *User_SignUp = NULL;
 
     User_SignUp = fopen("User_data.txt","a");
+    if(User_SignUp == NULL)
+        {
+            printf("File doesn't open properly.\n");
+            return;
+        }
 
     fprintf(User_SignUp,"%s | %s\n",Username,Password);
 
@@ -62,6 +69,7 @@ void SignUp()
 
 int SignIn()
 {
+    
     char Username[7],Password[7],U1[7],P1[7];
     printf("\n");
     printf("-------------------------------------\n");
@@ -77,6 +85,11 @@ int SignIn()
     FILE *User_SignIn = NULL;
 
     User_SignIn = fopen("User_data.txt","r");
+    if(User_SignIn == NULL)
+        {
+            printf("File doesn't open properly.\n");
+            return;
+        }
 
     while(fscanf(User_SignIn,"%s | %s",U1,P1)==2)
     {
@@ -99,6 +112,10 @@ int Admin_SignIn()
 {
     char Username[5],Password[5],U1[5],P1[5];
 
+    printf("\n");
+    printf("-------------------------------------\n");
+    printf("            Admin Sign In            \n");
+    printf("-------------------------------------\n");
     printf("Enter Username : ");
     scanf("%s",Username);
 
@@ -106,8 +123,13 @@ int Admin_SignIn()
     scanf("%s",Password);
 
     FILE *Admin_SignIn = NULL;
-
     Admin_SignIn = fopen("Admin_data.txt","r");
+    if(Admin_SignIn == NULL)
+        {
+            printf("File doesn't open properly.\n");
+            return;
+        }
+
 
     while(fscanf(Admin_SignIn,"%s | %s",U1,P1)==2)
     {
@@ -123,43 +145,59 @@ int Admin_SignIn()
     
     fclose(Admin_SignIn);
     Admin_SignIn = NULL;
-
-    Admin_Panel();
     return 0;
 }
 
 void Add_Items()
 {
-    int Item_Qty;
-    printf("You can add only 5 Items At a time.\n");
-
-    struct Items Add[5];
-    for(int i=0;i<5;++i)
+    printf("\n\n");
+    while(1)
     {
-        printf("Item Number : %d.\n",i+1);
-        printf("Enter Item Name : ");
-        scanf("%10s",Add[i].Item_Name);
-        printf("Enter Item Price : ");
-        scanf("%f",&Add[i].Item_Price);
+        int Item_Qty;
+        struct Items Add[5];
+
+        printf("You can add only 5 Items At a time.\n");
+        for(int i=0;i<5;++i)
+        {
+            printf("Item Number : %d.\n",i+1);
+            printf("Enter Item Name : ");
+            scanf("%10s",Add[i].Item_Name);
+            printf("Enter Item Price : ");
+            scanf("%f",&Add[i].Item_Price);
+        }
+
+        FILE*ptr = NULL;
+        ptr = fopen("Item_list.txt","a");
+        if(ptr == NULL)
+        {
+            printf("File doesn't open properly.\n");
+            return;
+        }
+
+        for(int i=0;i<5;++i)
+        {
+            fprintf(ptr,"%15s\t\t%5.2f\n",Add[i].Item_Name,Add[i].Item_Price);
+        }
+
+        fclose(ptr);
+        ptr = NULL;
+
+        printf("\nAll items Added Successfully.\n\n");
+        int choice_to_add = 0;
+        printf("Want to add another items (Yes - 1)(No - 0) : ");
+        scanf("%d",&choice_to_add);
+
+        if(choice_to_add == 1)
+        {
+            continue;
+        }else if(choice_to_add == 0)
+        {
+            break;
+        }else
+        {
+            printf("Invalid Input......!\n\n");
+        }
     }
-
-    FILE*ptr = NULL;
-    ptr = fopen("Item_list.txt","a");
-    if(ptr == NULL)
-    {
-        printf("File doesn't open properly.\n");
-        return;
-    }
-
-    for(int i=0;i<5;++i)
-    {
-        fprintf(ptr,"%10s\t\t%5.2f\n",Add[i].Item_Name,Add[i].Item_Price);
-    }
-
-    fclose(ptr);
-    ptr = NULL;
-
-    printf("\nAll items Added Successfully.\n");
 }
 
 void Display_Item()
@@ -172,6 +210,7 @@ void Display_Item()
         printf("File doesn't open properly.\n");
         return;
     }
+
     int i = 0;
 
     while(fscanf(ptr,"%s\t\t%f",&Display[i].Item_Name,&Display[i].Item_Price)==2)
@@ -179,25 +218,36 @@ void Display_Item()
         ++i;
     }
 
-    printf("%3s\t%10s\t\t\t%7s\n","No.","Item Name","Item Price");
+    printf("\n\n");
+    printf("-------------------- Item List --------------------\n");
+    printf("===================================================\n");
+    printf("%3s\t%15s\t\t\t%7s\n","No.","Item Name","Item Price");
+    printf("---------------------------------------------------\n");
 
     for(int j=0;j<i;++j)
     {
-        printf("%0.2d.\t%10s\t\t\t%5.2f\n", j+1 , Display[j].Item_Name , Display[j].Item_Price );
+        printf("%0.2d.\t\t%10s\t\t%5.2f\n", j+1 , Display[j].Item_Name , Display[j].Item_Price );
     }
     fclose(ptr);
     ptr = NULL;
 }
 
 void User_List(){
+
     char Username[10],Password[10];
     FILE* User_List = NULL;
     User_List = fopen("User_data.txt","r");
+
     int i = 0;
+    printf("\n\n");
+    printf("---------- User List ----------\n");
+    printf("===============================\n");
     printf("%10s\t \t%10s\n","Username","Password");
+    printf("===============================\n");
+
     while(fscanf(User_List,"%s | %s",Username,Password)==2)
     {
-        printf("%6s\t|\t%6s\n",Username,Password);
+        printf("%10s\t\t|\t%10s\n",Username,Password);
         i++;
     }
 }
@@ -211,7 +261,6 @@ void Admin_Panel()
         printf("| 1. Add Items            |\n");
         printf("| 2. Display Items        |\n");
         printf("| 3. All User List        |\n");
-        printf("| 4. Exit                 |\n");
         printf("---------------------------\n");
 
 
@@ -228,8 +277,6 @@ void Admin_Panel()
                 break;
             case 3:
                 User_List();
-                break;
-            case 4:
                 break;
             default:
                 printf("Invalid input...!\n");
@@ -253,8 +300,9 @@ void Admin_Panel()
 
 void User_Interface()
 {
-    printf("_______________WelCome To Our Store_______________\n");
-    printf("____________________XYZ  Store____________________\n");
+    printf("\n\n");
+    printf("______________ WelCome To Our Store ______________\n");
+    printf("___________________ XYZ  Store ___________________\n");
 
     struct Customer C1;
 
@@ -265,12 +313,14 @@ void User_Interface()
     printf("Enter your Mobile Number : ");
     scanf("%s",C1.Customer_mobile);
     getchar();
+
     while(strlen(C1.Customer_mobile)!=10)
     {
         printf("Re-Enter your Mobile Number : ");
         scanf("%s",C1.Customer_mobile);
         getchar();
     }
+
     printf("--------------------------------------------------\n");
     printf("\v");
     printf("The Product list is Given Here.\n");
@@ -290,12 +340,12 @@ void User_Interface()
     }
 
     printf("--------------------------------------------------\n");
-    printf("%3s \t%10s \t  \t%3s\n","No.","Item Name","Rate");
+    printf("%3s \t%15s \t  \t%3s\n","No.","Item Name","Rate");
     printf("--------------------------------------------------\n");
     
     for(int j=0;j<i;++j)
     {   
-        printf("%0.2d.\t%10s\t--\t%0.2f\n",j+1,Display[j].Item_Name,Display[j].Item_Price);
+        printf("%0.2d.\t%15s\t--\t\t%0.2f\n",j+1,Display[j].Item_Name,Display[j].Item_Price);
     }
     fclose(ptr);
     ptr = NULL;
@@ -353,7 +403,7 @@ void Generate_Bill(struct Customer C1, int Itemcount)
 
     FILE * User_Bill_List = NULL;
     User_Bill_List = fopen("User_Accounts.txt","a");
-    fprintf(User_Bill_List,"%10s \t\t%10s \t\t\t%2.0d \t\t\t%2.0d \t\t%5.2f \t\t\t%s \t\t%s\n",C1.Customer_Name,C1.Customer_mobile,Itemcount,C1.Total_Qty,C1.Total_Bill,__DATE__,__TIME__);
+    fprintf(User_Bill_List,"%10s \t\t\t%10s \t\t\t%2.0d \t\t\t%2.0d \t\t%5.2f \t\t\t%s \t\t\t%s\n",C1.Customer_Name,C1.Customer_mobile,Itemcount,C1.Total_Qty,C1.Total_Bill,__DATE__,__TIME__);
 
     fclose(User_Bill_List);
     User_Bill_List = NULL;
@@ -372,8 +422,8 @@ void Generate_Bill(struct Customer C1, int Itemcount)
 
     
     fprintf(Bill_Admin,"\n\n");
-    fprintf(Bill_Admin,"--------------------Bill-Reciept-------------------\n");
-    fprintf(Bill_User,"--------------------Bill-Reciept-------------------\n");
+    fprintf(Bill_Admin,"-------------------Bill-Reciept-------------------\n");
+    fprintf(Bill_User,"-------------------Bill-Reciept-------------------\n");
     
     fprintf(Bill_Admin,"Name : %10s \t  Mobile No. : %10s \n",C1.Customer_Name,C1.Customer_mobile);
     fprintf(Bill_User,"Name : %10s \t  Mobile No. : %10s \n",C1.Customer_Name,C1.Customer_mobile);
@@ -429,7 +479,7 @@ void Generate_Bill(struct Customer C1, int Itemcount)
     Bill_User = NULL;
 
     printf("\nYour Bill is Generated Successfully.....!\n");
-    
+    printf("--------------- Visit again ---------------\n");
 }
 
 void main()
