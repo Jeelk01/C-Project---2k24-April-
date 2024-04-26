@@ -1,1 +1,3 @@
-      Name        Mobile No.              Items      Quantity    Total Cost             Date                  Time                                  
+      Name              Mobile No.              Items      Quantity           Total Cost             Date                           Time
+          Prince 		1234567890 			 4 			 8 		5750.00 			Apr 26 2024 			09:45:18
+     Happy 			9193471778 			 2 			 3 		70.00 			Apr 26 2024 			09:49:06
