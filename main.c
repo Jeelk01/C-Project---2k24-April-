@@ -211,7 +211,7 @@ void Admin_Panel()
         printf("| 1. Add Items            |\n");
         printf("| 2. Display Items        |\n");
         printf("| 3. All User List        |\n");
-        printf("| 4. Exit        |\n");
+        printf("| 4. Exit                 |\n");
         printf("---------------------------\n");
 
 
@@ -440,13 +440,14 @@ void main()
     printf("| Enjoy Your Visit.                            |\n");
     printf("===============================================\n");
 
-    usleep(1000000); // Delay for 1 second.
+    usleep(2000000); // Delay for 1 second.
 
     printf("\n\n");
     printf("---------------------------\n");
     printf("| 1. User                 |\n");
     printf("| 2. Admin                |\n");
     printf("---------------------------\n");
+    
     int choice = 0,choice1;
     printf("Enter your choice : ");
     scanf("%d",&choice);
@@ -487,6 +488,7 @@ void main()
                 usleep(D3);
                 Admin_Panel();
             }
+            break;
 
         default:
         printf("Invalid Input.....!\n");
