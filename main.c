@@ -12,6 +12,7 @@ struct Items{
     char Item_Name[15];
     float Item_Price;
 };
+
 struct Customer{
     char Customer_Name[10];
     char Customer_mobile[11];
@@ -252,9 +253,16 @@ void User_List(){
     }
 }
 
+void Accounts() 
+{
+    char Customer_Name[15];
+    float Total_Price;
+    int Items, Qty;
+}
 void Admin_Panel()
 {
-    while(1){
+    while(1)
+    {
         int Admin_Flag = 0;
         printf("\n\n");
         printf("---------------------------\n");
