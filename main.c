@@ -257,8 +257,34 @@ void Accounts()
 {
     char Customer_Name[15];
     float Total_Price;
-    int Items, Qty;
+    int Items, Qty, choice;
+    
+    FILE* User_Accounts = NULL;
+    
+    User_Accounts = fopen("User_Accounts.txt", "r");
+    printf("---------------------------\n");
+    printf("| 1. Today's Accounts     |\n");
+    printf("| 2. All Accounts         |\n");
+    printf("---------------------------\n");
+
+    printf("Enter That you want : ");
+    scanf("%d",&choice);
+
+    switch(choice) 
+        {
+            case 1:
+            break;
+
+            case 2:
+            break;
+
+            default:
+            printf("Invalid Input......!");
+        }
+
+    
 }
+
 void Admin_Panel()
 {
     while(1)
